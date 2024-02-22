@@ -24,7 +24,7 @@ namespace LabSid.Services
         {
             try
             {
-                var user = await this._userRepository.GetByEmail(email);
+                var user = new UserDto(await this._userRepository.GetByEmail(email));
 
                 if (user == null)
                 {
@@ -46,9 +46,9 @@ namespace LabSid.Services
                     user = user
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }

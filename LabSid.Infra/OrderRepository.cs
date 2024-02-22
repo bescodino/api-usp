@@ -85,7 +85,7 @@ namespace LabSid.Infra
             ";
 
             [Key]
-            public long Id { get; set; }
+            public int Id { get; set; }
             public string Name { get; set; }
             public long UserId { get; set; }
             public List<IProduct> Items { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

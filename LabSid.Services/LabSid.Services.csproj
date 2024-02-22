@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.3.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LabSid.Infra\LabSid.Infra.csproj" />
+    <ProjectReference Include="..\LabSid.Models\LabSid.Models.csproj" />
+  </ItemGroup>
+
 </Project>

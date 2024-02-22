@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LabSid.Infra\LabSid.Infra.csproj" />
     <ProjectReference Include="..\LabSid.Migrations\LabSid.Migrations.csproj" />
+    <ProjectReference Include="..\LabSid.Services\LabSid.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@ namespace LabSid.Models
             UserId = order.UserId;
         }
 
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<IProduct> Items { get; set; }
         public long UserId { get; set; }

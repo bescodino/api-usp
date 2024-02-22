@@ -1,4 +1,5 @@
-using LabSid.Api.DTO;
+using LabSid.Services.DTO;
+using LabSid.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabSid.Api.Controllers
@@ -8,19 +9,21 @@ namespace LabSid.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
+        private readonly IUserService _userService;
 
-        public UserController(ILogger<UserController> logger)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
-        [HttpGet("{ano}/{mes}")]
-        public async Task<ActionResult<UserDTO>> Get(long id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDto>> Get(long id)
         {
             try
             {
-                var chuvaUgrhiMensal = await _chuvaUgrhiMensalService.GetChuvaUgrhiMensal(ano, mes).ConfigureAwait(false);
-                return Ok(chuvaDTO);
+                var user = await this._userService.GetByIdAsync(id).ConfigureAwait(false);
+                return Ok(user);
             }
             catch (Exception ex)
             {

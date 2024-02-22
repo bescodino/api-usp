@@ -34,23 +34,18 @@ namespace LabSid.Infra
             }
         }
 
+        public Task<IUser> GetByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IUser> GetByIdAsync(long id)
         {
             try
             {
-                string sql = $@"SELECT 
-                                        * 
-                                FROM 
-                                        {UserDao.TABLE_NAME} u
-                                WHERE
-                                        Id = @id;
-                ";
-
-                var result = await connection.QueryFirstOrDefaultAsync<IUser>(sql, new { id }).ConfigureAwait(false);
-
-                return result;
+                return await connection.GetAsync<UserDao>(2);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -92,7 +87,7 @@ namespace LabSid.Infra
             ";
 
             [Key]
-            public long Id { get; set; }
+            public int Id { get; set; }
             public string Name { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }

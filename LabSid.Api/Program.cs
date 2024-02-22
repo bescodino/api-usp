@@ -1,12 +1,12 @@
 using LabSid.Infra;
 using LabSid.Infra.Interfaces;
-using LabSid.SalaSituacao.Migrations;
+using LabSid.Migrations;
+using LabSid.Services;
+using LabSid.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string is empty!");
 var environment = builder.Configuration.GetValue<string>("MigrationEnvironment");
@@ -20,6 +20,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+
+//Services
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSwaggerGen(s =>
 {
