@@ -3,7 +3,9 @@ using Dapper.Contrib.Extensions;
 using LabSid.Infra.Interfaces;
 using LabSid.Models;
 using LabSid.Models.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Data.Common;
 using TableAttribute = Dapper.Contrib.Extensions.TableAttribute;
 
 namespace LabSid.Infra
@@ -12,38 +14,49 @@ namespace LabSid.Infra
     {
         private readonly IDbConnection connection;
 
-        public UserRepository(IPostgresqlContext context)
+        public UserRepository(ISqliteContext context)
         {
             this.connection = context.GetConnection();
+            
         }
 
         public async Task<IEnumerable<IUser>> Get()
         {
             try
             {
-                string sql = $@"select 
-                                        * 
-                                from {UserDao.TABLE_NAME} u 
-                                limit 100";
-
-                return await connection.QueryAsync<UserDao>(sql).ConfigureAwait(false);
+                var retrievedModel = await connection.GetAllAsync<UserDao>();
+                return retrievedModel;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
         }
 
-        public Task<IUser> GetByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IUser> GetByIdAsync(long id)
+        public async Task<IUser> GetByEmail(string email)
         {
             try
             {
-                return await connection.GetAsync<UserDao>(2);
+                var users = await connection.GetAllAsync<UserDao>();
+                var filterUser = users.FirstOrDefault(x  => x.Email == email);   
+                if (filterUser != null)
+                {
+                    return filterUser.Export();
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IUser?> GetByIdAsync(long id)
+        {
+            try
+            {
+                var retrievedModel = await connection.GetAsync<UserDao>(id);
+                return retrievedModel?.Export();
             }
             catch (Exception)
             {
@@ -87,6 +100,7 @@ namespace LabSid.Infra
             ";
 
             [Key]
+            [Column("Id")]
             public int Id { get; set; }
             public string Name { get; set; }
             public string Email { get; set; }
@@ -99,7 +113,7 @@ namespace LabSid.Infra
                 Id = user.Id;
                 Name = user.Name;
                 Email = user.Email;
-                Password = user.Password;
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             }
 
             public IUser Export() => new User(this);

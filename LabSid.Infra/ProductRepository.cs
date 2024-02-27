@@ -13,7 +13,7 @@ namespace LabSid.Infra
     {
         private readonly IDbConnection connection;
 
-        public ProductRepository(IPostgresqlContext context)
+        public ProductRepository(ISqliteContext context)
         {
             this.connection = context.GetConnection();
         }

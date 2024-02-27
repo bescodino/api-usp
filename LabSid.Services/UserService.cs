@@ -43,7 +43,7 @@ namespace LabSid.Services
                 return new LoginDto()
                 {
                     token = token,
-                    user = user
+                    email = user.Email,
                 };
             }
             catch (Exception)

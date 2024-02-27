@@ -4,7 +4,11 @@ using LabSid.Migrations;
 using LabSid.Services;
 using LabSid.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SQLitePCL;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,14 +16,48 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 var environment = builder.Configuration.GetValue<string>("MigrationEnvironment");
 
 
-// Postgres
-builder.Services.AddScoped<IPostgresqlContext>(d => new PostgresqlContext(connectionString));
+//Sqlite
+Batteries.Init();
+builder.Services.AddScoped<ISqliteContext>(d => new SqliteContext(connectionString));
 
 //Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+// Mapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+
+builder.Services.AddAuthorization(options =>
+{
+
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("Users", policy =>
+        policy.RequireRole("User"));
+});
+
+// Configure JWT authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "usp-issuer",
+        ValidAudience = "usp-audience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-key"))
+    };
+});
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
@@ -93,12 +131,13 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("v1/swagger.json", "LabSid | API - v1");
 });
 
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
+app.UseRouting(); // Ensure UseRouting is called before other middleware
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

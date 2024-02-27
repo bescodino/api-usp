@@ -22,7 +22,7 @@ namespace LabSid.Migrations
             .AddFluentMigratorCore()
                .ConfigureRunner(
                 builder => builder
-                    .AddPostgres11_0()
+                    .AddSQLite()
                     .WithGlobalConnectionString(connectionString)
                     .ScanIn(typeof(Migrator).Assembly).For.Migrations()
                 )
