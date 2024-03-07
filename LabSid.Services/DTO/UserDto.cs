@@ -5,7 +5,7 @@ namespace LabSid.Services.DTO
 {
     public class UserDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -22,7 +22,7 @@ namespace LabSid.Services.DTO
         {
             return new User
             {
-                Id = this.Id.GetValueOrDefault(),
+                Id = this.Id,
                 Name = this.Name,
                 Email = this.Email,
                 Password = this.Password

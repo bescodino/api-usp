@@ -8,5 +8,6 @@ namespace LabSid.Services.Interfaces
         Task<UserDto> SaveAsync(IUser user);
         Task<UserDto> GetByIdAsync(long id);
         Task<LoginDto> Login(string email, string password);
+        Task<RefreshTokenDto> RefreshToken(long id, string token);
     }
 }

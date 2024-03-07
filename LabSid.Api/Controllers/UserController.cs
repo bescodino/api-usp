@@ -83,5 +83,19 @@ namespace LabSid.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("refreshToken")]
+        public async Task<IActionResult> RefreshToken([FromQuery] long id, [FromQuery] string accessToken)
+        {
+            try
+            {
+                var refreshToken = await this._userService.RefreshToken(id, accessToken);
+                return Ok(refreshToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
