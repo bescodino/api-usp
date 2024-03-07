@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SQLitePCL;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +59,11 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        LifetimeValidator = (notBefore, expires, token, parameters) =>
+        {
+            return (expires > DateTime.UtcNow && expires <= DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)));
+        }
     };
 });
 
