@@ -42,6 +42,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 var key = Encoding.ASCII.GetBytes(Settings.Secret);
+
 // Configure JWT authentication
 builder.Services.AddAuthentication(x =>
 {

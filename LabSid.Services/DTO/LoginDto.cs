@@ -6,6 +6,7 @@ namespace LabSid.Services.DTO
     {
         public string email{ get; set; }
         public string token { get; set; }
+        public string id { get; set; }
 
     }
 }

@@ -31,7 +31,7 @@ namespace LabSid.Api.Controllers
         {
             try
             {
-                var user = await this._userService.GetByIdAsync(id).ConfigureAwait(false);
+                var user = await this._userService.GetByIdAsync(id);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -55,7 +55,6 @@ namespace LabSid.Api.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] UserUpdateModel model)
         {

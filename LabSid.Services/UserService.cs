@@ -17,6 +17,8 @@ namespace LabSid.Services
         public async Task<UserDto> GetByIdAsync(long id)
         {
             var user = await this._userRepository.GetByIdAsync(id);
+            if (user == null) 
+                return null; 
             return new UserDto(user);
         }
 
@@ -43,7 +45,8 @@ namespace LabSid.Services
                 return new LoginDto()
                 {
                     token = token,
-                    email = user.Email,
+                    email = user.Email,                    
+                    id = user.Id.ToString(),
                 };
             }
             catch (Exception)
